@@ -8,7 +8,7 @@ def spell_reducer(spells: list[int], operation: str) -> int:
     if not spells:
         return 0
 
-    operations = {
+    operations: dict[str, Callable[[int, int], int]] = {
         "add": operator.add,
         "multiply": operator.mul,
         "max": max,
@@ -21,7 +21,8 @@ def spell_reducer(spells: list[int], operation: str) -> int:
     return functools.reduce(operations[operation], spells)
 
 
-def partial_enchanter(base_enchantment: "Callable") -> "dict[str, Callable]":
+def partial_enchanter(base_enchantment: "Callable[..., str]"
+                      ) -> "dict[str, Callable[..., str]]":
     return {
         "fire": functools.partial(base_enchantment, 50, "fire"),
         "ice": functools.partial(base_enchantment, 50, "ice"),
@@ -42,19 +43,19 @@ def memoized_fibonacci(n: int) -> int:
 
 def spell_dispatcher() -> "Callable[[Any], str]":
     @functools.singledispatch
-    def dispatch(spell) -> str:
+    def dispatch(spell: Any) -> str:
         return "Unknown spell type"
 
-    @dispatch.register
+    @dispatch.register(str)
     def _(spell: int) -> str:
         return f"Damage spell: {spell} damage"
 
-    @dispatch.register
+    @dispatch.register(str)
     def _(spell: str) -> str:
         return f"Enchantment: {spell}"
 
-    @dispatch.register
-    def _(spell: list) -> str:
+    @dispatch.register(list)
+    def _(spell: list[Any]) -> str:
         return f"Multi-cast: {len(spell)} spells"
 
     return dispatch
@@ -64,7 +65,7 @@ def base_enchantment(power: int, element: str, target: str) -> str:
     return f"{element} enchantment with {power} power on {target}"
 
 
-def main():
+def main() -> None:
     spells = [10, 20, 30, 40]
 
     print("Testing spell reducer...")
@@ -88,13 +89,14 @@ def main():
     print(dispatcher([1, 2, 3]))
     print(dispatcher(3.14))
     print()
-    
+
     print("Testing partial enchanter...")
     enchantments = partial_enchanter(base_enchantment)
     print(enchantments["fire"]("sword"))
     print(enchantments["ice"]("shield"))
     print(enchantments["lightning"]("staff"))
     print()
+
 
 if __name__ == "__main__":
     main()

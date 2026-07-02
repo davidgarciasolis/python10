@@ -1,57 +1,68 @@
+from typing import Any
 
 
-def artifact_sorter(artifacts: list[dict]) -> list[dict]:
-	return sorted(artifacts, key=lambda artifact: artifact["power"], reverse=True)
+def artifact_sorter(artifacts: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return sorted(artifacts,
+                  key=lambda artifact: artifact["power"],
+                  reverse=True
+                  )
 
-def power_filter(mages: list[dict], min_power: int) -> list[dict]:
-	return (list(filter(lambda mage: mage["power"] >= min_power, mages)))
+
+def power_filter(mages: list[dict[str, Any]],
+                 min_power: int
+                 ) -> list[dict[str, Any]]:
+    return (list(filter(lambda mage: mage["power"] >= min_power, mages)))
+
 
 def spell_transformer(spells: list[str]) -> list[str]:
-	return (list(map(lambda spell: "* " + spell + " *", spells)))
+    return (list(map(lambda spell: "* " + spell + " *", spells)))
 
-def mage_stats(mages: list[dict]) -> dict:
-	return {
-		"max_power": max(mages, key = lambda mage: mage["power"])["power"],
-		"min_power": min(mages, key = lambda mage: mage["power"])["power"],
-		"avg_power": round(
-			sum(map(lambda mage: mage["power"], mages)) / len(mages), 2
-		)
-	}
+
+def mage_stats(mages: list[dict[str, Any]]) -> dict[str, int]:
+    return {
+        "max_power": max(mages, key=lambda mage: mage["power"])["power"],
+        "min_power": min(mages, key=lambda mage: mage["power"])["power"],
+        "avg_power": round(
+            sum(map(lambda mage: mage["power"], mages)) / len(mages), 2
+        )
+    }
 
 
 if __name__ == "__main__":
-	artifacts = [
-		{"name": "Crystal Orb", "power": 85, "type": "orb"},
-		{"name": "Fire Staff", "power": 92, "type": "staff"},
-		{"name": "Moon Dagger", "power": 61, "type": "blade"},
-	]
-	mages = [
-		{"name": "Aerin", "power": 80, "element": "fire"},
-		{"name": "Borin", "power": 45, "element": "water"},
-		{"name": "Cira", "power": 90, "element": "earth"},
-	]
-	spells = ["fireball", "heal", "shield"]
-	sorted_artifacts = artifact_sorter(artifacts)
-	transformed_spells = spell_transformer(spells)
-	filtered_mages = power_filter(mages, 70)
-	stats = mage_stats(mages)
+    artifacts = [
+        {"name": "Crystal Orb", "power": 85, "type": "orb"},
+        {"name": "Fire Staff", "power": 92, "type": "staff"},
+        {"name": "Moon Dagger", "power": 61, "type": "blade"},
+    ]
+    mages = [
+        {"name": "Aerin", "power": 80, "element": "fire"},
+        {"name": "Borin", "power": 45, "element": "water"},
+        {"name": "Cira", "power": 90, "element": "earth"},
+    ]
+    spells = ["fireball", "heal", "shield"]
+    sorted_artifacts = artifact_sorter(artifacts)
+    transformed_spells = spell_transformer(spells)
+    filtered_mages = power_filter(mages, 70)
+    stats = mage_stats(mages)
 
-	print()
-	print("Testing artifact sorter...")
-	print(
-		f"{sorted_artifacts[0]['name']} ({sorted_artifacts[0]['power']} power) "
-		f"comes before {sorted_artifacts[1]['name']} ({sorted_artifacts[1]['power']} power)"
-	)
-	print()
-	print("Testing spell transformer...")
-	print(" ".join(transformed_spells))
-	print()
-	print("Testing power filter...")
-	print(filtered_mages)
-	print()
-	print("Testing mage stats...")
-	print(
-		f"Max: {stats['max_power']}, "
-		f"Min: {stats['min_power']}, "
-		f"Average: {stats['avg_power']}"
-	)
+    print()
+    print("Testing artifact sorter...")
+    print(
+        f"{sorted_artifacts[0]['name']}"
+        f"({sorted_artifacts[0]['power']} power) "
+        f"comes before {sorted_artifacts[1]['name']}"
+        f"({sorted_artifacts[1]['power']} power)"
+    )
+    print()
+    print("Testing spell transformer...")
+    print(" ".join(transformed_spells))
+    print()
+    print("Testing power filter...")
+    print(filtered_mages)
+    print()
+    print("Testing mage stats...")
+    print(
+        f"Max: {stats['max_power']}, "
+        f"Min: {stats['min_power']}, "
+        f"Average: {stats['avg_power']}"
+    )
