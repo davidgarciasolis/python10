@@ -46,7 +46,7 @@ def spell_dispatcher() -> "Callable[[Any], str]":
     def dispatch(spell: Any) -> str:
         return "Unknown spell type"
 
-    @dispatch.register(str)
+    @dispatch.register(int)
     def _(spell: int) -> str:
         return f"Damage spell: {spell} damage"
 

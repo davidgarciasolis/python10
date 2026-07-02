@@ -57,7 +57,7 @@ class MageGuild:
     @staticmethod
     def validate_mage_name(name: str) -> bool:
         return (len(name) >= 3
-                and all(char.isalpha() or char == " " for char in name))
+                and all(c.isalpha() or c.isspace() for c in name))
 
     @power_validator(10)
     def cast_spell(self, spell_name: str, power: int) -> str:
@@ -66,7 +66,7 @@ class MageGuild:
 
 @spell_timer
 def fireball() -> str:
-    time.sleep(0.1)
+    time.sleep(0.101)
     return "Fireball cast!"
 
 
@@ -75,9 +75,9 @@ def failing_spell() -> str:
     raise Exception("Spell fizzled")
 
 
-@power_validator(10)
-def waaagh_spell(power: int) -> str:
-    return "Waaaaaaagh spelled !"
+@retry_spell(3)
+def waaagh_spell() -> str:
+    return ("Waaaaaaagh spelled !")
 
 
 def main() -> None:
@@ -87,7 +87,7 @@ def main() -> None:
 
     print("Testing retrying spell...")
     print(failing_spell())
-    print(waaagh_spell(10))
+    print(waaagh_spell())
     print()
 
     print("Testing MageGuild...")
@@ -96,6 +96,7 @@ def main() -> None:
     print(MageGuild.validate_mage_name("Al"))
     print(guild.cast_spell("Lightning", 15))
     print(guild.cast_spell("Lightning", 5))
+    print()
 
 
 if __name__ == "__main__":
